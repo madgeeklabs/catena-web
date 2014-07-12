@@ -59,11 +59,13 @@ angular.module('catenaApp')
         $scope.name = resp.name;
         $scope.id = resp.id;
         $scope.url = resp.url;
+        $scope.image = resp.image;
     });
     $scope.save = function(){
         Device.save({id: $scope.id, 
         name: $scope.name,
         email: $scope.email,
+        image: $scope.image,
         phone: $scope.phone,
         price: $scope.price,
         sendEmail: $scope.sendEmail,
