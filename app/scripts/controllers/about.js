@@ -17,9 +17,9 @@ angular.module('catenaApp')
     }])
     .factory('Toggle', ['$resource', function($resource){
         var host = 'https://192.168.0.111';
-        var urlApi = '/keys';
+        var urlApi = '/keys/:userId';
         urlApi = host + urlApi;
-        var resource = $resource(urlApi, {}, {'get': { method: 'GET', isArray: true }}  );
+        var resource = $resource(urlApi, {}, {'get': { method: 'GET' }}  );
         return resource;
     }])
   .controller('DeviceCtrl', function ($scope, Keys, Toggle) {
@@ -31,8 +31,6 @@ angular.module('catenaApp')
     $scope.hello = 'yeia';
     console.log('helloooo');
 
-    var host = "http://192.168.0.111";
-    var route = "/keys";
     Keys.get(function(results){
         var key = results[0];
         results.push(angular.copy(key));
@@ -51,7 +49,7 @@ angular.module('catenaApp')
         }else{
             key.status = 1;
         }
-        Toggle.get({status:key.status}, function(res){
+        Toggle.get({userId:key.user, status:key.status}, function(res){
             
         
         });
