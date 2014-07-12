@@ -15,6 +15,25 @@ angular.module('catenaApp')
         var resource = $resource(urlApi, {}, {'get': { method: 'GET', isArray: true }}  );
         return resource;
     }])
+    .factory('Devices', ['$resource', function($resource){
+        var host = 'http://www.madgeeklabs.com:3000';
+        var urlApi = '/devices';
+        urlApi = host + urlApi;
+        var resource = $resource(urlApi, {}, {'get': { method: 'GET', isArray: true }}  );
+        return resource;
+    }])
+    .factory('Device', ['$resource', function($resource){
+        var host = 'http://www.madgeeklabs.com:3000';
+        var urlApi = '/devices/:id';
+        urlApi = host + urlApi;
+        var resource = $resource(urlApi, {id: '@id'}, {}  );
+        return resource;
+    }])
+    .factory('SettingsDevice', ['$resource', function($resource){
+        var resource = $resource(urlApi, {}, {'get': { method: 'GET' }}  );
+        //TODO ?
+        return resource;
+    }])
     .factory('Toggle', ['$resource', function($resource){
         var host = 'https://192.168.0.111';
         var urlApi = '/keys/:userId';
@@ -22,7 +41,44 @@ angular.module('catenaApp')
         var resource = $resource(urlApi, {}, {'get': { method: 'GET' }}  );
         return resource;
     }])
-  .controller('DeviceCtrl', function ($scope, Keys, Toggle) {
+  .controller('SettingsCtrl', function ($scope, Device) {
+    $scope.awesomeThings = [
+      'HTML5 Boilerplate',
+      'AngularJS',
+      'Karma'
+    ];
+    $scope.hello = 'yeia';
+    console.log('helloooo');
+    
+    Device.get({id:1}, function(resp){
+        $scope.phone = resp.phone;
+        $scope.email = resp.email;
+        $scope.sendSMS = resp.sendSMS;
+        $scope.sendEmail = resp.sendEmail;
+        $scope.price = resp.price;
+        $scope.name = resp.name;
+        $scope.id = resp.id;
+        $scope.url = resp.url;
+    });
+    $scope.save = function(){
+        Device.save({id: $scope.id, 
+        name: $scope.name,
+        email: $scope.email,
+        phone: $scope.phone,
+        price: $scope.price,
+        sendEmail: $scope.sendEmail,
+        sendSMS: $scope.sendSMS,
+        url: $scope.url,
+        }, function(resp){
+            console.log('after save');
+            console.log(resp);
+             
+        });
+    
+    };
+
+  })
+  .controller('UsersCtrl', function ($scope, Keys, Toggle) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -32,15 +88,7 @@ angular.module('catenaApp')
     console.log('helloooo');
 
     Keys.get(function(results){
-        var key = results[0];
-        results.push(angular.copy(key));
-        results.push(angular.copy(key));
-        results.push(angular.copy(key));
-        results.push(angular.copy(key));
-        results.push(angular.copy(key));
-        results.push(angular.copy(key));
         $scope.keys = results;
-        
     });
 
     $scope.toggleAllow = function(key){
