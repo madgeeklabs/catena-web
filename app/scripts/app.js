@@ -37,7 +37,7 @@ angular
       })
       .when('/stats', {
         templateUrl: 'views/stats.html',
-        controller: 'SettingsCtrl'
+        controller: 'StatsCtrl'
       })
       .otherwise({
         redirectTo: '/'

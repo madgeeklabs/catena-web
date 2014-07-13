@@ -29,9 +29,23 @@ angular.module('catenaApp')
         var resource = $resource(urlApi, {id: '@id'}, {}  );
         return resource;
     }])
+    .factory('DeviceRasp', ['$resource', function($resource){
+        var host = 'https://192.168.0.111';
+        var urlApi = '/admin';
+        urlApi = host + urlApi;
+        var resource = $resource(urlApi, {}, {}  );
+        return resource;
+    }])
     .factory('SettingsDevice', ['$resource', function($resource){
         var resource = $resource(urlApi, {}, {'get': { method: 'GET' }}  );
         //TODO ?
+        return resource;
+    }])
+    .factory('Stats', ['$resource', function($resource){
+        var host = 'https://192.168.0.111';
+        var urlApi = '/stats';
+        urlApi = host + urlApi;
+        var resource = $resource(urlApi, {}, {'get': { method: 'GET' }}  );
         return resource;
     }])
     .factory('Toggle', ['$resource', function($resource){
@@ -41,7 +55,19 @@ angular.module('catenaApp')
         var resource = $resource(urlApi, {}, {'get': { method: 'GET' }}  );
         return resource;
     }])
-  .controller('SettingsCtrl', function ($scope, Device) {
+  .controller('StatsCtrl', function ($scope, Stats) {
+    $scope.awesomeThings = [
+      'HTML5 Boilerplate',
+      'AngularJS',
+      'Karma'
+    ];
+    $scope.hello = 'yeia';
+    console.log('helloooo');
+        Stats.get({}, function(resp){
+            $scope.money = resp.money;
+        });
+    })
+  .controller('SettingsCtrl', function ($scope, Device, DeviceRasp) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -76,6 +102,10 @@ angular.module('catenaApp')
             console.log(resp);
              
         });
+        DeviceRasp.save({
+            phone: $scope.sendSMS?$scope.phone:'',
+            email: $scope.sendEmail?$scope.email:'',
+        },function(){});
     
     };
 
